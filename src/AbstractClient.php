@@ -22,6 +22,7 @@ abstract class AbstractClient
             case 'get':
             case 'post':
             case 'put':
+            case 'delete':
             case 'file':
                 $uri = implode('/', array_filter($this->query));
                 $this->query = [];
@@ -68,9 +69,7 @@ abstract class AbstractClient
 
     protected function request($method, $uri, $data = null)
     {
-        $options = [
-            'http_errors' => false,
-        ];
+        $options = [];
 
         switch (strtoupper($method)) {
             case 'GET':
@@ -92,7 +91,7 @@ abstract class AbstractClient
                 break;
         }
 
-        $options = array_merge_recursive($options, $this->withOptions());
+        $options = array_merge_recursive($this->withOptions(), $options);
 
         $callback = function () use ($method, $uri, $options) {
             $client = new Client($options);
