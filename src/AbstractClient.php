@@ -52,6 +52,20 @@ abstract class AbstractClient
         return $response->getBody()->getContents();
     }
 
+    protected function postHandler($data)
+    {
+        return [
+            'json' => $data,
+        ];
+    }
+
+    protected function putHandler($data)
+    {
+        return [
+            'json' => $data,
+        ];
+    }
+
     protected function request($method, $uri, $data = null)
     {
         $options = [
@@ -66,10 +80,10 @@ abstract class AbstractClient
                 ];
                 break;
             case 'POST':
+                $options += $this->postHandler($data);
+                break;
             case 'PUT':
-                $options += [
-                    'json' => $data,
-                ];
+                $options += $this->putHandler($data);
                 break;
             case 'FILE':
                 $options += [
