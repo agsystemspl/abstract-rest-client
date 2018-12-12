@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Response;
 abstract class AbstractClient
 {
     protected $query = [];
+    protected $options = [];
 
     public function __get($name)
     {
@@ -32,6 +33,11 @@ abstract class AbstractClient
         $this->query[] = $name;
         $this->query = array_merge($this->query, $arguments);
         return $this;
+    }
+
+    public function customOptions(array $options)
+    {
+        $this->options = $options;
     }
 
     protected function withOptions()
@@ -77,7 +83,7 @@ abstract class AbstractClient
                 break;
         }
 
-        $options = array_merge_recursive($this->withOptions(), $options);
+        $options = array_merge_recursive($this->withOptions(), $options, $this->options);
 
         $callback = function () use ($method, $uri, $options) {
             $client = new Client($options);
