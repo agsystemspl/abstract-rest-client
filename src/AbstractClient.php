@@ -35,40 +35,45 @@ abstract class AbstractClient
         return $this;
     }
 
+    public function withOptions(array $options = [])
+    {
+        $this->options = $options;
+    }
+
     protected function clientOptions()
     {
         return [];
     }
 
-    protected function handleGet($data = null)
+    protected function handleGet($data = [])
     {
         return [
             'query' => $data,
         ];
     }
 
-    protected function handlePost($data = null)
+    protected function handlePost($data = [])
     {
         return [
             'json' => $data
         ];
     }
 
-    protected function handlePut($data = null)
+    protected function handlePut($data = [])
     {
         return [
             'json' => $data
         ];
     }
 
-    protected function handleDelete($data = null)
+    protected function handleDelete($data = [])
     {
         return [
             'query' => $data
         ];
     }
 
-    protected function handleFile($data = null)
+    protected function handleFile($data = [])
     {
         return [
             'file' => $data
@@ -91,19 +96,21 @@ abstract class AbstractClient
 
     protected function request($method, $uri, $data = null)
     {
-        $options = [];
+        $options = $this->clientOptions();
 
         $handler = 'handle' . ucfirst(strtolower($method));
 
         if (method_exists($this, $handler))
-            $options = $this->$handler($data);
+            $options = array_replace_recursive($options, $this->$handler($data));
+        
+        $options = array_replace_recursive($options, $this->options);
 
         $callback = function () use ($method, $uri, $options) {
             $client = new Client(
-                $this->clientOptions()
+                $options
             );
 
-            return $client->request($method, $uri, $options);
+            return $client->request($method, $uri);
         };
 
         return $this->handleResponse($callback);
