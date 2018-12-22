@@ -12,7 +12,7 @@ abstract class AbstractClient
 
     public function __get($name)
     {
-        $name = $this->pathHandler($name);
+        $name = $this->handlePath($name);
         $this->query[] = $name;
         return $this;
     }
@@ -35,22 +35,52 @@ abstract class AbstractClient
         return $this;
     }
 
-    public function customOptions(array $options)
-    {
-        $this->options = $options;
-    }
-
-    protected function withOptions()
+    protected function clientOptions()
     {
         return [];
     }
 
-    protected function pathHandler($path)
+    protected function handleGet($data = null)
+    {
+        return [
+            'query' => $data,
+        ];
+    }
+
+    protected function handlePost($data = null)
+    {
+        return [
+            'json' => $data
+        ];
+    }
+
+    protected function handlePut($data = null)
+    {
+        return [
+            'json' => $data
+        ];
+    }
+
+    protected function handleDelete($data = null)
+    {
+        return [
+            'query' => $data
+        ];
+    }
+
+    protected function handleFile($data = null)
+    {
+        return [
+            'file' => $data
+        ];
+    }
+
+    protected function handlePath($path)
     {
         return $path;
     }
 
-    protected function responseHandler(callable $callback)
+    protected function handleResponse(callable $callback)
     {
         /**
          * @var $response Response
@@ -63,33 +93,19 @@ abstract class AbstractClient
     {
         $options = [];
 
-        switch (strtoupper($method)) {
-            case 'GET':
-            case 'DELETE':
-                $options += [
-                    'query' => $data,
-                ];
-                break;
-            case 'POST':
-            case 'PUT':
-                $options += [
-                    'json' => $data,
-                ];
-                break;
-            case 'FILE':
-                $options += [
-                    'file' => $data,
-                ];
-                break;
-        }
+        $handler = 'handle' . ucfirst(strtolower($method));
 
-        $options = array_merge_recursive($this->withOptions(), $options, $this->options);
+        if (method_exists($this, $handler))
+            $options = $this->$handler($data);
 
         $callback = function () use ($method, $uri, $options) {
-            $client = new Client($options);
-            return $client->request($method, $uri);
+            $client = new Client(
+                $this->clientOptions()
+            );
+
+            return $client->request($method, $uri, $options);
         };
 
-        return $this->responseHandler($callback);
+        return $this->handleResponse($callback);
     }
 }
