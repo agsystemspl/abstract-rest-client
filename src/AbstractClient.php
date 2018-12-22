@@ -98,12 +98,25 @@ abstract class AbstractClient
     {
         $options = $this->clientOptions();
 
+        if (is_null($data))
+            $data = [];
+
+        if (is_null($requestOptions))
+            $requestOptions = [];
+
         $handler = 'handle' . ucfirst(strtolower($method));
 
         if (method_exists($this, $handler))
-            $options = array_replace_recursive($options, call_user_func([$this, $handler], $data));
+            $options = array_replace_recursive(
+                $options,
+                call_user_func([$this, $handler], $data)
+            );
 
-        $options = array_replace_recursive($options, $this->options, $requestOptions);
+        $options = array_replace_recursive(
+            $options,
+            $this->options,
+            $requestOptions
+        );
 
         $callback = function () use ($method, $uri, $options) {
             $client = new Client(
