@@ -27,7 +27,7 @@ abstract class AbstractClient
             case 'file':
                 $uri = implode('/', array_filter($this->query));
                 $this->query = [];
-                return $this->request($name, $uri, array_shift($arguments));
+                return $this->request($name, $uri, array_shift($arguments), array_shift($arguments));
         }
 
         $this->query[] = $name;
@@ -94,16 +94,16 @@ abstract class AbstractClient
         return $response->getBody()->getContents();
     }
 
-    protected function request($method, $uri, $data = null)
+    protected function request($method, $uri, $data = [], $requestOptions = [])
     {
         $options = $this->clientOptions();
 
         $handler = 'handle' . ucfirst(strtolower($method));
 
         if (method_exists($this, $handler))
-            $options = array_replace_recursive($options, $this->$handler($data));
-        
-        $options = array_replace_recursive($options, $this->options);
+            $options = array_replace_recursive($options, call_user_func([$this, $handler], $data));
+
+        $options = array_replace_recursive($options, $this->options, $requestOptions);
 
         $callback = function () use ($method, $uri, $options) {
             $client = new Client(
