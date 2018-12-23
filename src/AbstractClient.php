@@ -7,13 +7,17 @@ use GuzzleHttp\Psr7\Response;
 
 abstract class AbstractClient
 {
-    protected $query = [];
+    protected $path = [];
     protected $options = [];
+
+    public function __construct(array $options = [])
+    {
+        $this->options = $options;
+    }
 
     public function __get($name)
     {
-        $name = $this->handlePath($name);
-        $this->query[] = $name;
+        $this->path[] = $name;
         return $this;
     }
 
@@ -25,13 +29,14 @@ abstract class AbstractClient
             case 'put':
             case 'delete':
             case 'file':
-                $uri = implode('/', array_filter($this->query));
-                $this->query = [];
+                $uri = implode('/', array_filter($this->path));
+                $uri = $this->handlePath($uri);
+                $this->path = [];
                 return $this->request($name, $uri, array_shift($arguments), array_shift($arguments));
         }
 
-        $this->query[] = $name;
-        $this->query = array_merge($this->query, $arguments);
+        $this->path[] = $name;
+        $this->path = array_merge($this->path, $arguments);
         return $this;
     }
 
