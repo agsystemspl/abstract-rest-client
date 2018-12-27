@@ -124,11 +124,8 @@ abstract class AbstractClient
         );
 
         $callback = function () use ($method, $uri, $options) {
-            $client = new Client(
-                $options
-            );
-
-            return $client->request($method, $uri);
+            $client = new Client();
+            return $client->request($method, $uri, $options);
         };
 
         return $this->handleResponse($callback);
