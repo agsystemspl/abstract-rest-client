@@ -27,6 +27,7 @@ abstract class AbstractClient
             case 'get':
             case 'post':
             case 'put':
+            case 'patch':
             case 'delete':
             case 'file':
                 $uri = implode('/', array_filter($this->path));
@@ -35,7 +36,7 @@ abstract class AbstractClient
                 return $this->request($name, $uri, array_shift($arguments), array_shift($arguments));
         }
 
-        $this->path[] = $name;
+        $this->path[] = urlencode($name);
         $this->path = array_merge($this->path, $arguments);
         return $this;
     }
@@ -65,6 +66,13 @@ abstract class AbstractClient
     }
 
     protected function handlePut($data = [])
+    {
+        return [
+            'json' => $data
+        ];
+    }
+
+    protected function handlePatch($data = [])
     {
         return [
             'json' => $data
