@@ -46,6 +46,11 @@ abstract class AbstractClient
         $this->options = $options;
     }
 
+    public function appendOptions(array $options = [])
+    {
+        $this->options += $options;
+    }
+
     protected function clientOptions()
     {
         return [];
