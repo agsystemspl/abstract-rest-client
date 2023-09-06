@@ -17,7 +17,7 @@ abstract class AbstractClient
 
     public function __get($name)
     {
-        $this->path[] = $name;
+        $this->path[] = $this->handlePath($name);
         return $this;
     }
 
@@ -31,7 +31,6 @@ abstract class AbstractClient
             case 'delete':
             case 'file':
                 $uri = implode('/', array_filter($this->path));
-                $uri = $this->handlePath($uri);
                 $this->path = [];
                 return $this->request($name, $uri, array_shift($arguments), array_shift($arguments));
         }
