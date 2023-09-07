@@ -35,7 +35,7 @@ abstract class AbstractClient
                 return $this->request($name, $uri, array_shift($arguments), array_shift($arguments));
         }
 
-        $this->path[] = urlencode($name);
+        $this->path[] = urlencode($this->handlePath($name));
         $this->path = array_merge($this->path, $arguments);
         return $this;
     }
