@@ -9,6 +9,7 @@ abstract class AbstractClient
 {
     protected $path = [];
     protected $options = [];
+    protected $lastUri;
 
     public function __construct(array $options = [])
     {
@@ -31,6 +32,7 @@ abstract class AbstractClient
             case 'delete':
             case 'file':
                 $uri = implode('/', array_filter($this->path));
+                $this->lastUri = $uri;
                 $this->path = [];
                 return $this->request($name, $uri, array_shift($arguments), array_shift($arguments));
         }
