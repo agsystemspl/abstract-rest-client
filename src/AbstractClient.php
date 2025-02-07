@@ -93,6 +93,13 @@ abstract class AbstractClient
         ];
     }
 
+    protected function handleHead($data = [])
+    {
+        return [
+            'query' => $data
+        ];
+    }
+
     protected function handleFile($data = [])
     {
         return [
