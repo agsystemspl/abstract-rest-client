@@ -30,6 +30,7 @@ abstract class AbstractClient
             case 'put':
             case 'patch':
             case 'delete':
+            case 'head':
             case 'file':
                 $uri = implode('/', array_filter($this->path));
                 $this->lastUri = $uri;
