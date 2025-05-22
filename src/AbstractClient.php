@@ -32,7 +32,7 @@ abstract class AbstractClient
             case 'delete':
             case 'head':
             case 'file':
-                $uri = implode('/', array_filter($this->path));
+                $uri = implode('/', array_filter($this->path, fn($value) => $value !== null && $value !== false && $value !== ''));
                 $this->lastUri = $uri;
                 $this->path = [];
                 return $this->request($name, $uri, array_shift($arguments), array_shift($arguments));
