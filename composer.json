@@ -1,15 +1,36 @@
 {
-    "name": "agsystemspl/abstract-rest-client",
-    "version": "1.0.1",
-    "description": "Abstract REST Client",
-    "type": "library",
-    "require": {
-        "php": ">=7.0",
-        "guzzlehttp/guzzle": "^6.0|^7.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "AGSystems\\REST\\": "src/"
-        }
+  "name": "agsystemspl/abstract-rest-client",
+  "description": "PHP (Guzzle) API Wrapper",
+  "keywords": [
+    "rest-client",
+    "api-client",
+    "http-client",
+    "guzzle-wrapper",
+    "fluent-interface",
+    "rest-api",
+    "http-request",
+    "psr-7",
+    "psr-18",
+    "chainable-api",
+    "php-rest-client"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "readme": "README.md",
+  "authors": [
+    {
+      "name": "Paweł Feruś",
+      "email": "p.ferus@agsystems.pl",
+      "homepage": "https://github.com/mindc"
     }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "guzzlehttp/guzzle": "^6.0|^7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "AGSystems\\REST\\": "src/"
+    }
+  }
 }
