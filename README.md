@@ -18,6 +18,14 @@ A PHP (Guzzle) API Wrapper designed for simplicity and extensibility. This libra
 - PHP 7.0+
 - Guzzle HTTP (^6.0 or ^7.0)
 
+## Installation
+
+Install via Composer:
+
+```bash
+composer require agsystemspl/abstract-rest-client
+```
+
 ## Basic Usage
 
 ### Extending the Abstract Client
